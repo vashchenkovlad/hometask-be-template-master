@@ -13,7 +13,7 @@ const getTheMostSolventClient = async (req) => {
 
   return Profile.findAll({
     attributes: [
-      [sequelize.fn('sum', sequelize.col('Client.Job.price')), 'total'],
+      [sequelize.fn('sum', sequelize.col('Client.Job.price')), 'paid'],
       'firstName',
       'lastName',
     ],
@@ -39,7 +39,7 @@ const getTheMostSolventClient = async (req) => {
       type: PROFILE_TYPES.CLIENT,
     },
     group: ['Profile.id'],
-    order: [['total', 'DESC']],
+    order: [['paid', 'DESC']],
     raw: true,
     subQuery: false,
     limit,
