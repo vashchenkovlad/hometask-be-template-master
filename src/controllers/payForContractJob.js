@@ -13,7 +13,7 @@ const payForContractJob = async (req) => {
   const jobPrice = Number(amount);
 
   if (amount === '' || jobPrice < 0) {
-    throw new HttpError('Invalid amount was sent', 400);
+    throw new HttpError('Invalid amount was sent!', 400);
   }
 
   const unpaidJob = await Job.findOne({
@@ -38,7 +38,7 @@ const payForContractJob = async (req) => {
   });
 
   if (!unpaidJob) {
-    throw new HttpError('Job was not found', 404);
+    throw new HttpError('Job was not found!', 404);
   }
 
   const t = await sequelize.transaction();
@@ -46,7 +46,11 @@ const payForContractJob = async (req) => {
   try {
     const { id, ClientId, ContractorId } = unpaidJob;
 
-    const clientProfile = await Profile.findOne({ where: { id: ClientId } });
+    const clientProfile = await Profile.findOne({
+      where: { id: ClientId },
+      transaction: t,
+      lock: t.LOCK.UPDATE,
+    });
 
     if (clientProfile.balance < jobPrice) {
       throw new HttpError('You balance is lower than job price!', 400);

@@ -31,7 +31,7 @@ const depositMoneyIntoTheBalance = async (req) => {
         },
       ],
       where: {
-        // QUESTION: should this piece of logic work with all contract statuses,
+        // QUESTION: should this piece of logic work with all contract statuses.
         status: { [Op.eq]: CONTRACT_STATUS.IN_PROGRESS },
         '$Job.paid$': { [Op.eq]: null },
         ClientId: userId,
